@@ -52,3 +52,18 @@ input {
   font-size: 26px;
   line-height: 1.16;
 }
+
+.form {
+  display: flex;
+  gap: 10px; 
+}
+
+.promise-button {
+  background-color: yellow;
+  color: blue;
+  border-color: red;
+
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.16;
+}
