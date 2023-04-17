@@ -8,7 +8,7 @@ const refs = {
   amount: document.querySelector('[name="amount"]'),
 }
 
-
+refs.body.style.backgroundColor = '#f7eff4';
 refs.form.addEventListener('click', onPromiseCreate);
 
 function createPromise(position, delay) {
@@ -17,11 +17,11 @@ function createPromise(position, delay) {
   setTimeout(() => {
        if (shouldResolve) {
         resolve({ position, delay });
-      } else {
-        reject({ position, delay });
-      }
-    }, delay);
-  });
+       } else {
+         reject({ position, delay });
+       }
+     }, delay);
+   });
 }
 
 function onPromiseCreate(e) {
@@ -40,6 +40,6 @@ function onPromiseCreate(e) {
   })
   .catch(({ position, delay }) => {
   Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`);
-    });
+      });
   }
 }
