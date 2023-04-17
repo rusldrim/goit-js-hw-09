@@ -1,53 +1,43 @@
 import Notiflix from 'notiflix';
 
-const formEl = document.querySelector('.form');
-const btnEl = document.querySelector('button');
+form.addEventListener('click', onPromiseCreate);
 
-let formData = {};
-formEl.addEventListener('input', event => handleAddSubmitLocalStorage(event));
-function handleAddSubmitLocalStorage(event) {
-  formData[event.target.name] = event.target.value;
+function createPromise(position, delay) {
+  return new Promise((resolve, reject) => {
+    const shouldResolve = Math.random() > 0.3;
+    setTimeout(() => {
+      if (shouldResolve) {
+        resolve({ position, delay });
+      } else {
+        reject({ position, delay });
+      }
+    }, delay);
+  });
 }
 
-formEl.addEventListener('submit', event => {
-  event.preventDefault();
+function onPromiseCreate(e) {
+  e.preventDefault();
+  const { delay, step, amount } = e.currentTarget.elements;
+  let inputDelay = Number(delay.value);
+  let inputStep = Number(step.value);
+  let inputAmount = Number(amount.value);
 
-  if (
-    formEl.delay.value !== '' &&
-    formEl.step.value != '' &&
-    formEl.amount.value != ''
-  ) {
-    for (
-      let i = 0,
-        delayArr = Number(formData.delay),
-        stepArr = Number(formData.step);
-      i < formData.amount;
-      i += 1, delayArr += stepArr
-    ) {
-      const promise = new Promise((resolve, reject) => {
-        const shouldResolve = Math.random() > 0.3;
-        setTimeout(() => {
-          if (shouldResolve) {
-            resolve();
-          } else {
-            reject();
-          }
-        }, delayArr);
+  for (let i = 1; i <= inputAmount; i += 1) {
+    inputDelay += inputStep;
+
+    createPromise(i, inputDelay)
+      .then(({ position, delay }) => {
+        Notify.success(
+          `✅ Fulfilled promise ${position} in ${delay}ms`,
+          options
+        );
+      })
+      .catch(({ position, delay }) => {
+        Notify.failure(
+          `❌ Rejected promise ${position} in ${delay}ms`,
+          options
+        );
       });
-
-      promise
-        .then(() => {
-          Notiflix.Notify.success(
-            `✅ Fulfilled promise ${i + 1} in ${delayArr}ms`
-          );
-        })
-        .catch(() => {
-          Notiflix.Notify.failure(
-            `❌ Rejected promise ${i + 1} in ${delayArr}ms`
-          );
-        });
-    }
+    e.currentTarget.reset();
   }
-  formEl.reset();
-  formEl.removeEventListener('input', handleAddSubmitLocalStorage);
-});
+}
